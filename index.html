@@ -985,16 +985,32 @@ footer .fbase span { margin: 0; }
 .pf-side{background:radial-gradient(90% 60% at 100% 0%,rgba(244,182,63,.22),transparent 60%),linear-gradient(165deg,#3A1A1E,#1E0B0E)}
 .pf-side::before{opacity:.45}
 #tentang .prof{max-width:920px;margin-inline:auto}
-/* menu: di HP tampil sebagai deretan tab yang bisa digeser */
+/* menu hamburger (HP), bar pesan muncul setelah hero, footer rapi */
 .top .tabs{display:contents}
+.burger{display:none}
 @media (max-width:640px){
-  .top{flex-wrap:wrap;row-gap:10px;padding-block:16px 8px}
-  .top nav{display:contents}
-  .top nav a.nav-k{order:2}
-  .top .tabs{display:flex;order:3;flex:1 1 100%;gap:8px;overflow-x:auto;margin-inline:calc(-1*max(16px,env(safe-area-inset-left,0px)));padding-inline:max(16px,env(safe-area-inset-left,0px));padding-bottom:6px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
-  .top .tabs::-webkit-scrollbar{display:none}
-  .top nav .tabs a.hide-s{display:inline-flex;flex:none;white-space:nowrap;font-size:.875rem;font-weight:700;padding:8px 15px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.28);color:#fff}
-  .top nav .tabs a.hide-s::after{display:none}
+  .top{position:relative;flex-wrap:nowrap}
+  .burger{display:inline-flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;width:46px;height:46px;padding:0;border-radius:50%;border:1.5px solid rgba(255,255,255,.55);background:transparent;cursor:pointer;flex:none}
+  .burger span{display:block;width:20px;height:2px;border-radius:2px;background:#fff;transition:transform .25s ease,opacity .2s ease}
+  .top.open .burger span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+  .top.open .burger span:nth-child(2){opacity:0}
+  .top.open .burger span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+  .top nav{display:none;position:absolute;left:0;right:0;top:calc(100% - 2px);z-index:40;flex-direction:column;align-items:stretch;gap:2px;padding:8px;border-radius:20px;background:#2B1216;border:1px solid rgba(255,255,255,.16);box-shadow:0 24px 48px -16px rgba(0,0,0,.6)}
+  .top.open nav{display:flex}
+  .top nav a,.top nav a.hide-s{display:block;padding:14px 16px;border-radius:12px;font-size:1rem;font-weight:700;color:#fff}
+  .top nav a:active,.top nav a.hide-s:active{background:rgba(255,255,255,.1)}
+  .top nav a::after{display:none}
+  .top nav a.nav-k{margin-top:6px;text-align:center;background:var(--gold);border-color:var(--gold);color:var(--on-gold)}
+  body{padding-bottom:0}
+  .bar{transform:translateY(110%);transition:transform .3s ease;padding-top:10px}
+  .bar.show{transform:none}
+  .bar .btn{flex:1 1 100%}
+  footer{gap:20px;padding-block:48px 28px}
+  footer .fnav{display:grid;grid-template-columns:repeat(3,1fr);gap:4px 12px}
+  footer .fnav a{padding:10px 0}
+  footer .fsoc{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  footer .fsoc a{display:flex;align-items:center;justify-content:center;gap:7px;padding:11px 6px;border:1px solid var(--line);border-radius:14px;text-decoration:none;color:var(--ink);font-size:.8125rem;font-weight:700}
+  footer .fbase{flex-direction:column;align-items:flex-start;gap:10px}
 }
 </style>
 <style>[hidden]{display:none!important} body{margin:0} img{max-width:100%}</style>
@@ -1023,7 +1039,8 @@ footer .fbase span { margin: 0; }
     <div class="wrap">
     <header class="top" id="top">
       <a class="brand" href="#top"><svg width="34" height="21" aria-hidden="true"><use href="#rings"/></svg>Janji Manis</a>
-      <nav>
+      <button class="burger" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="menu"><span></span><span></span><span></span></button>
+      <nav id="menu" aria-label="Menu utama">
         <div class="tabs">
         <a class="hide-s" href="#contoh">Contoh</a>
         <a class="hide-s" href="#paket">Harga</a>
@@ -1270,7 +1287,6 @@ footer .fbase span { margin: 0; }
 
   <div class="bar">
     <div class="bar-in">
-      <a class="btn ghost" href="#contoh">Lihat contoh</a>
       <a class="btn" href="https://www.instagram.com/janjimanis.creation/" data-dm>Pesan lewat Instagram</a>
     </div>
   </div>
@@ -2063,6 +2079,26 @@ var EVENT_AT = new Date("2027-02-13T08:00:00+07:00");
     img.addEventListener("load", ok); img.addEventListener("error", function () { img.style.display = "none"; });
     if (img.complete) ok();
   })();
+
+/* menu hamburger + bar pesan */
+(function(){
+  var top=document.getElementById("top"),btn=top&&top.querySelector(".burger"),menu=document.getElementById("menu");
+  if(btn&&menu){
+    function set(o){top.classList.toggle("open",o);btn.setAttribute("aria-expanded",o?"true":"false");btn.setAttribute("aria-label",o?"Tutup menu":"Buka menu")}
+    btn.addEventListener("click",function(e){e.stopPropagation();set(!top.classList.contains("open"))});
+    menu.addEventListener("click",function(e){if(e.target.closest("a"))set(false)});
+    document.addEventListener("click",function(e){if(!top.contains(e.target))set(false)});
+    document.addEventListener("keydown",function(e){if(e.key==="Escape")set(false)});
+  }
+  var bar=document.querySelector(".bar"),hero=document.querySelector(".hero .cta-row"),kon=document.getElementById("kontak");
+  if(bar){
+    if(!("IntersectionObserver" in window)||!hero){bar.classList.add("show");return}
+    var heroOut=false,konIn=false;
+    function upd(){bar.classList.toggle("show",heroOut&&!konIn)}
+    new IntersectionObserver(function(en){heroOut=!en[0].isIntersecting&&en[0].boundingClientRect.top<0;upd()}).observe(hero);
+    if(kon)new IntersectionObserver(function(en){konIn=en[0].isIntersecting;upd()}).observe(kon);
+  }
+})();
 </script>
 </body>
 </html>
