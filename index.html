@@ -981,10 +981,6 @@ footer .fbase span { margin: 0; }
 .pf-link { margin-top: 22px; align-self: flex-start; background: none; color: var(--brand); border: 0; border-bottom: 3px solid var(--gold); border-radius: 0; padding: 0 0 4px; box-shadow: none; font-weight: 800; text-decoration: none; }
 .pf-link:hover { color: var(--ink); }
 @media (max-width: 860px) { .prof { grid-template-columns: 1fr; } .pf-side { padding: 28px 24px; } .pf-body { padding: 28px 24px; } .pf-cols { grid-template-columns: 1fr; gap: 24px; } .pf-photo { width: 160px; } }
-/* profil: latar gelap cokelat-arang, beda dari kontak merah (isi tidak diubah) */
-.pf-side{background:radial-gradient(90% 60% at 100% 0%,rgba(244,182,63,.22),transparent 60%),linear-gradient(165deg,#3A1A1E,#1E0B0E)}
-.pf-side::before{opacity:.45}
-#tentang .prof{max-width:920px;margin-inline:auto}
 /* menu hamburger (HP), bar pesan muncul setelah hero, footer rapi */
 .top .tabs{display:contents}
 .burger{display:none}
@@ -1011,6 +1007,16 @@ footer .fbase span { margin: 0; }
   footer .fsoc{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
   footer .fsoc a{display:flex;align-items:center;justify-content:center;gap:7px;padding:11px 6px;border:1px solid var(--line);border-radius:14px;text-decoration:none;color:var(--ink);font-size:.8125rem;font-weight:700}
   footer .fbase{flex-direction:column;align-items:flex-start;gap:10px}
+}
+/* hero dirapikan: tepi kiri sejajar dengan bagian bawahnya, siluet joglo tidak menimpa teks, tombol HP sama lebar */
+.hero-wrap > .wrap{max-width:1110px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.hero-wrap > .jg{left:auto;right:max(0px,calc(50% - 555px));transform:none;width:min(560px,70%);bottom:18px;color:rgba(244,182,63,.1)}
+@media (max-width:640px){
+  .hero-wrap > .jg{right:-40px;width:360px}
+  .hero .cta-row{display:grid;grid-template-columns:1fr;gap:12px}
+  .hero .cta-row .btn{width:100%;justify-content:center;text-align:center}
+  .hero .facts{flex-wrap:nowrap;justify-content:space-between;gap:8px;font-size:.78rem}
+  .hero .facts li{white-space:nowrap}
 }
 </style>
 <style>[hidden]{display:none!important} body{margin:0} img{max-width:100%}</style>
