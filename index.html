@@ -981,6 +981,21 @@ footer .fbase span { margin: 0; }
 .pf-link { margin-top: 22px; align-self: flex-start; background: none; color: var(--brand); border: 0; border-bottom: 3px solid var(--gold); border-radius: 0; padding: 0 0 4px; box-shadow: none; font-weight: 800; text-decoration: none; }
 .pf-link:hover { color: var(--ink); }
 @media (max-width: 860px) { .prof { grid-template-columns: 1fr; } .pf-side { padding: 28px 24px; } .pf-body { padding: 28px 24px; } .pf-cols { grid-template-columns: 1fr; gap: 24px; } .pf-photo { width: 160px; } }
+/* profil: latar gelap cokelat-arang, beda dari kontak merah (isi tidak diubah) */
+.pf-side{background:radial-gradient(90% 60% at 100% 0%,rgba(244,182,63,.22),transparent 60%),linear-gradient(165deg,#3A1A1E,#1E0B0E)}
+.pf-side::before{opacity:.45}
+#tentang .prof{max-width:920px;margin-inline:auto}
+/* menu: di HP tampil sebagai deretan tab yang bisa digeser */
+.top .tabs{display:contents}
+@media (max-width:640px){
+  .top{flex-wrap:wrap;row-gap:10px;padding-block:16px 8px}
+  .top nav{display:contents}
+  .top nav a.nav-k{order:2}
+  .top .tabs{display:flex;order:3;flex:1 1 100%;gap:8px;overflow-x:auto;margin-inline:calc(-1*max(16px,env(safe-area-inset-left,0px)));padding-inline:max(16px,env(safe-area-inset-left,0px));padding-bottom:6px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .top .tabs::-webkit-scrollbar{display:none}
+  .top nav .tabs a.hide-s{display:inline-flex;flex:none;white-space:nowrap;font-size:.875rem;font-weight:700;padding:8px 15px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.28);color:#fff}
+  .top nav .tabs a.hide-s::after{display:none}
+}
 </style>
 <style>[hidden]{display:none!important} body{margin:0} img{max-width:100%}</style>
 </head>
@@ -1009,11 +1024,13 @@ footer .fbase span { margin: 0; }
     <header class="top" id="top">
       <a class="brand" href="#top"><svg width="34" height="21" aria-hidden="true"><use href="#rings"/></svg>Janji Manis</a>
       <nav>
+        <div class="tabs">
         <a class="hide-s" href="#contoh">Contoh</a>
         <a class="hide-s" href="#paket">Harga</a>
         <a class="hide-s" href="#cara">Cara pesan</a>
         <a class="hide-s" href="#tanya">FAQ</a>
         <a class="hide-s" href="#tentang">Profil</a>
+        </div>
         <a class="nav-k" href="#kontak">Kontak</a>
       </nav>
     </header>
@@ -1173,7 +1190,7 @@ footer .fbase span { margin: 0; }
           <details class="q"><summary>Bagaimana cara bayarnya?</summary><p>Transfer bank atau e-wallet. Detailnya dikirim lewat DM Instagram.</p></details>
           <details class="q"><summary>Bisa ganti tulisan setelah jadi?</summary><p>Bisa, sesuai jatah revisi di paket yang kamu pilih.</p></details>
           <details class="q"><summary>Tamu perlu install aplikasi?</summary><p>Tidak. Undangan dibuka dari link di browser HP.</p></details>
-           <details class="q"><summary>Ada contoh lain?</summary><p>Ada. Contoh lain dan info terbaru kami taruh di <a href="https://www.instagram.com/janjimanis.creation/" data-ig target="_blank" rel="noopener">Instagram</a> dan <a href="https://www.tiktok.com/@janjimanis.creation" data-tt target="_blank" rel="noopener">TikTok</a> @janjimanis.creation.</p></details>
+          <details class="q"><summary>Ada contoh lain?</summary><p>Ada. Contoh lain dan info terbaru kami taruh di <a href="https://www.instagram.com/janjimanis.creation/" data-ig target="_blank" rel="noopener">Instagram</a> dan <a href="https://www.tiktok.com/@janjimanis.creation" data-tt target="_blank" rel="noopener">TikTok</a> @janjimanis.creation.</p></details>
         </div>
       </div>
     </section>
@@ -1754,6 +1771,25 @@ var EVENT_AT = new Date("2027-02-13T08:00:00+07:00");
       return;
     }
     wall.style.marginBottom = "";
+    if (narrow) {
+      /* HP: dua kolom rapat, tinggi kedua kolom diseimbangkan, tepi sejajar */
+      var gm = 12, cwm = Math.floor((wall.clientWidth - gm) / 2), hs = els.map(function (el) {
+        el.style.width = cwm + "px"; el.style.left = "0px"; el.style.top = "0px"; return el.offsetHeight;
+      }), n = els.length, bestM = 0, bestD = 1e9;
+      for (var m = 0; m < (1 << n); m++) {
+        var ha = 0, hb = 0, ca = 0, cb = 0;
+        for (var q = 0; q < n; q++) { if (m & (1 << q)) { hb += hs[q] + gm; cb++; } else { ha += hs[q] + gm; ca++; } }
+        var d = Math.abs(ha - hb) + Math.abs(ca - cb) * 40;
+        if (d < bestD) { bestD = d; bestM = m; }
+      }
+      var ya = 0, yb = 0;
+      els.forEach(function (el, q) {
+        if (bestM & (1 << q)) { el.style.left = (cwm + gm) + "px"; el.style.top = yb + "px"; yb += hs[q] + gm; }
+        else { el.style.left = "0px"; el.style.top = ya + "px"; ya += hs[q] + gm; }
+      });
+      wall.style.height = Math.max(ya, yb) - gm + "px";
+      return;
+    }
     var W = Math.min(wall.clientWidth, 800), g = narrow ? 7 : 10, k = narrow ? .6 : .86, step = 3;
     var items = els.map(function (el) {
       var key = el.getAttribute("data-ev"), w = Math.round(FMT[FMT_OF[key]].w * (SC[key] || 1) * k);
