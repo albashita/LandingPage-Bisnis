@@ -1014,6 +1014,10 @@ footer .fbase span { margin: 0; }
   .hero .facts{flex-wrap:nowrap;justify-content:space-between;gap:8px;font-size:.78rem}
   .hero .facts li{white-space:nowrap}
 }
+/* dua tombol hero sama ukuran: lebar mengikuti tombol yang paling panjang */
+.hero .cta-row{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;width:fit-content;max-width:100%;gap:12px}
+.hero .cta-row .btn{justify-content:center;text-align:center;white-space:nowrap}
+@media (max-width:520px){.hero .cta-row{grid-auto-flow:row;grid-auto-columns:auto;grid-template-columns:1fr}}
 </style>
 <style>[hidden]{display:none!important} body{margin:0} img{max-width:100%}</style>
 </head>
