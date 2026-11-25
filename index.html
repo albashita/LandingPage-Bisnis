@@ -1008,6 +1008,12 @@ footer .fbase span { margin: 0; }
   footer .fsoc a{display:flex;align-items:center;justify-content:center;gap:7px;padding:11px 6px;border:1px solid var(--line);border-radius:14px;text-decoration:none;color:var(--ink);font-size:.8125rem;font-weight:700}
   footer .fbase{flex-direction:column;align-items:flex-start;gap:10px}
 }
+/* hero dirapikan: tepi kiri sejajar dengan bagian bawahnya, siluet joglo tidak menimpa teks, tombol HP sama lebar */
+.hero-wrap > .wrap{max-width:1110px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+@media (max-width:640px){
+  .hero .facts{flex-wrap:nowrap;justify-content:space-between;gap:8px;font-size:.78rem}
+  .hero .facts li{white-space:nowrap}
+}
 </style>
 <style>[hidden]{display:none!important} body{margin:0} img{max-width:100%}</style>
 </head>
